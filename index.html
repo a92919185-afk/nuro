@@ -127,15 +127,24 @@
       background: linear-gradient(135deg, var(--dark) 0%, #4a1580 100%);
       overflow: hidden;
     }
+    /* Desktop: 2-col grid. text-top=row1/col1, text-bottom=row2/col1, image=col2/rows1-2 */
     .hero-inner {
-      display: grid; grid-template-columns: 1fr 1fr;
-      align-items: stretch; min-height: 560px;
-      position: relative; z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      min-height: 560px;
     }
-    .hero-text-col {
+    .hero-text-top {
+      grid-column: 1; grid-row: 1;
       color: #fff;
-      padding: 72px 48px 72px 24px;
-      display: flex; flex-direction: column; justify-content: center;
+      padding: 72px 48px 24px 24px;
+      display: flex; flex-direction: column; justify-content: flex-end;
+    }
+    .hero-text-bottom {
+      grid-column: 1; grid-row: 2;
+      color: #fff;
+      padding: 0 48px 72px 24px;
+      display: flex; flex-direction: column;
     }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 7px;
@@ -159,9 +168,9 @@
     .hero-h1 span { color: #ffb3de; }
     .hero-sub {
       font-size: 1.05rem; color: rgba(255,255,255,0.82);
-      line-height: 1.65; margin-bottom: 28px; max-width: 480px;
+      line-height: 1.65; margin-bottom: 0; max-width: 480px;
     }
-    .hero-bullets { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+    .hero-bullets { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; margin-top: 28px; }
     .hero-bullet {
       display: flex; align-items: center; gap: 10px;
       font-size: 0.95rem; color: rgba(255,255,255,0.9);
@@ -174,13 +183,12 @@
     }
     .hero-guarantee i { color: #ffb3de; }
 
-    /* Product wrapper — diagonal clip, primary bg */
+    /* Product wrapper — spans both rows on desktop, diagonal clip, primary bg */
     .hero-product-wrapper {
+      grid-column: 2; grid-row: 1 / span 2;
       display: flex; align-items: center; justify-content: center;
-      position: relative;
       clip-path: polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%);
       background-color: var(--primary);
-      min-height: 100%;
       padding: 48px 32px;
     }
     .hero-product-img {
@@ -221,31 +229,11 @@
     ═══════════════════════════════════════════════════ */
     #social-proof {
       background: var(--primary-light);
-      padding: 72px 0; text-align: center;
+      padding: 40px 0;
     }
-    .proof-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 28px; margin-top: 40px;
-    }
-    .proof-card {
-      background: var(--bg-white); border-radius: var(--radius-card);
-      padding: 28px 24px; box-shadow: var(--shadow-card); text-align: left;
-    }
-    .proof-card .stars { color: var(--star); font-size: 1rem; letter-spacing: 2px; margin-bottom: 12px; }
-    .proof-card blockquote { font-size: 0.95rem; color: var(--text); line-height: 1.65; margin-bottom: 16px; font-style: italic; }
-    .proof-card .reviewer { display: flex; align-items: center; gap: 10px; }
-    .proof-avatar {
-      width: 38px; height: 38px; border-radius: 50%;
-      background: var(--primary-light);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-heading); font-weight: 700;
-      font-size: 1rem; color: var(--primary); flex-shrink: 0;
-    }
-    .reviewer-name { font-weight: 700; font-size: 0.92rem; color: var(--dark); }
-    .reviewer-tag { font-size: 0.78rem; color: var(--text-muted); }
     .proof-stats {
       display: flex; flex-wrap: wrap;
-      justify-content: center; gap: 48px; margin-top: 48px;
+      justify-content: center; gap: 48px;
     }
     .proof-stat-number {
       font-family: var(--font-heading); font-size: 2.6rem;
@@ -506,22 +494,18 @@
        RESPONSIVE
     ═══════════════════════════════════════════════════ */
     @media (max-width: 900px) {
-      .hero-inner { grid-template-columns: 1fr; min-height: auto; }
-      .hero-text-col { text-align: center; padding: 60px 24px 36px; }
+      /* Mobile: flex-col — text-top(1) → image(2) → text-bottom(3) */
+      .hero-inner { display: flex; flex-direction: column; min-height: auto; }
+      .hero-text-top { order: 1; text-align: center; padding: 48px 24px 24px; grid-column: unset; grid-row: unset; }
+      .hero-product-wrapper { order: 2; grid-column: unset; grid-row: unset; clip-path: none; background-color: transparent; padding: 0; }
+      .hero-text-bottom { order: 3; text-align: center; padding: 0 24px 48px; grid-column: unset; grid-row: unset; }
       .hero-badge { margin-left: auto; margin-right: auto; }
       .hero-stars { justify-content: center; }
       .hero-sub { max-width: 100%; }
       .hero-cta-group { align-items: center; }
       .hero-bullets { align-items: flex-start; text-align: left; max-width: 340px; margin-left: auto; margin-right: auto; }
-      /* Mobile: image below text, above CTA per prd_images.md */
-      .hero-product-wrapper {
-        clip-path: none; background-color: transparent;
-        padding: 0 0 48px;
-        order: 0;
-      }
       .hero-product-img {
-        width: min(340px, 80vw);
-        margin: 0 auto;
+        width: min(340px, 80vw); margin: 24px auto;
         filter: drop-shadow(0 16px 32px rgba(0,0,0,0.12));
       }
       .benefits-layout { grid-template-columns: 1fr; gap: 40px; }
@@ -575,8 +559,9 @@
 ═══════════════════════════════════════════════════ -->
 <section id="hero" aria-labelledby="hero-h1">
   <div class="hero-inner">
-    <div class="hero-text-col container" style="max-width:none;">
-      <div style="max-width:580px;">
+    <!-- row 1 col 1: badge + stars + H1 + subheadline -->
+    <div class="hero-text-top">
+      <div style="max-width:540px;">
         <div class="hero-badge">
           <i class="fa-solid fa-award" aria-hidden="true"></i>
           #1 Mold Remover Gel — 1,887 Reviews
@@ -591,6 +576,21 @@
         <p class="hero-sub">
           NuroClean's revolutionary no-drip gel clings to walls, tiles, grout and ceilings — penetrating deep to eliminate mold at the source. No scrubbing. No mess. Visible results in 2 hours.
         </p>
+      </div>
+    </div>
+    <!-- col 2 spans rows 1-2: product image with diagonal clip -->
+    <div class="hero-product-wrapper">
+      <img
+        src="https://get-nuro.com/wp-content/uploads/Hero_18_Meet-our-Expert_mold_gel_NuroClean.avif"
+        alt="NuroClean Mold Remover Gel — no-drip formula for tiles, grout and walls"
+        class="hero-product-img"
+        width="480" height="560"
+        loading="eager"
+      />
+    </div>
+    <!-- row 2 col 1: bullets + CTA -->
+    <div class="hero-text-bottom">
+      <div style="max-width:540px;">
         <ul class="hero-bullets" role="list">
           <li class="hero-bullet"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Removes 100% of mold, mildew &amp; black stains</li>
           <li class="hero-bullet"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> No-drip formula — sticks to vertical surfaces</li>
@@ -608,16 +608,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <!-- Product image wrapper — diagonal clip-path, primary colour bg -->
-    <div class="hero-product-wrapper">
-      <img
-        src="https://get-nuro.com/wp-content/uploads/Hero_18_Meet-our-Expert_mold_gel_NuroClean.avif"
-        alt="NuroClean Mold Remover Gel — no-drip formula for tiles, grout and walls"
-        class="hero-product-img"
-        width="480" height="560"
-        loading="eager"
-      />
     </div>
   </div>
 </section>
@@ -657,48 +647,6 @@
 ═══════════════════════════════════════════════════ -->
 <section id="social-proof" aria-labelledby="proof-h2">
   <div class="container">
-    <div class="section-label">
-      <i class="fa-solid fa-users" aria-hidden="true"></i>&nbsp;Verified Customers
-    </div>
-    <h2 id="proof-h2" class="section-h2">Over 1,887 Customers Have<br>Already Said Goodbye to Mold</h2>
-    <p class="section-body">Real results from real people across Germany, Austria, UK, Australia, France, Switzerland and beyond.</p>
-
-    <div class="proof-grid">
-      <div class="proof-card">
-        <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
-        <blockquote>"I can't believe the difference NuroClean made! Our bathroom tiles used to be covered in black spots no matter how much I scrubbed, but this gel stayed put and literally erased them in one application. Now my bathroom looks brand new!"</blockquote>
-        <div class="reviewer">
-          <div class="proof-avatar" aria-hidden="true">A</div>
-          <div>
-            <div class="reviewer-name">Antoine</div>
-            <div class="reviewer-tag">Verified Buyer</div>
-          </div>
-        </div>
-      </div>
-      <div class="proof-card">
-        <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
-        <blockquote>"My kitchen backsplash was such an eyesore, with mold creeping into every seam and making it look old and dirty, but since using NuroClean, it looks fresh and clean again."</blockquote>
-        <div class="reviewer">
-          <div class="proof-avatar" aria-hidden="true">C</div>
-          <div>
-            <div class="reviewer-name">Camilla</div>
-            <div class="reviewer-tag">Verified Buyer</div>
-          </div>
-        </div>
-      </div>
-      <div class="proof-card">
-        <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
-        <blockquote>"We had this ugly mold patch in our basement that just wouldn't go away no matter what we did. NuroClean handled it easily! The gel stuck right on the wall and I just wiped it off."</blockquote>
-        <div class="reviewer">
-          <div class="proof-avatar" aria-hidden="true">S</div>
-          <div>
-            <div class="reviewer-name">Sabrina</div>
-            <div class="reviewer-tag">Verified Buyer</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div class="proof-stats" role="list">
       <div role="listitem" style="text-align:center">
         <div class="proof-stat-number">4.7<span style="font-size:1.4rem;">/5</span></div>
